@@ -15,6 +15,7 @@ class MainActivity : AppCompatActivity() {
     private fun start() {
         if(timer == null) {
             timer = fixedRateTimer("default", false, 1000, 1000) {
+                // TODO: instead of increment counter every second, try to calculate (subtract) new value from the actual time
                 t?.let {
                     val x = it.text.split(":")
                     var c = x[2].toInt() + 1
@@ -43,6 +44,10 @@ class MainActivity : AppCompatActivity() {
         l?.setOnClickListener{ start() }
         l?.text = applicationContext.getString(R.string.start)
     }
+    private fun reset() {
+        stop()
+        t?.text = applicationContext.getString(R.string.clock, 0, 0, 0)
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -50,6 +55,7 @@ class MainActivity : AppCompatActivity() {
         l = findViewById(R.id.left)
         r = findViewById(R.id.right)
         l?.setOnClickListener{ start() }
+        r?.setOnClickListener { reset() }
         start()
     }
 }
