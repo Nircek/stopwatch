@@ -3,5 +3,5 @@
     <string name="start">START</string>
     <string name="reset">RESET</string>
     <string name="stop">STOP</string>
-    <string name="clock">%1$d:%2$d:%3$d</string>
+    <string name="clock">%02d:%02d:%02d</string>
 </resources>
