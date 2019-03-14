@@ -14,7 +14,7 @@ class MainActivity : AppCompatActivity() {
     private var r: Button? = null
     private fun start() {
         if(timer == null) {
-            timer = fixedRateTimer("default", false, 0L, 1000) {
+            timer = fixedRateTimer("default", false, 1000, 1000) {
                 t?.let {
                     val x = it.text.split(":")
                     var c = x[2].toInt() + 1
@@ -33,7 +33,15 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
             }
+            l?.setOnClickListener { stop() }
+            l?.text = applicationContext.getString(R.string.stop)
         }
+    }
+    private fun stop() {
+        timer?.cancel()
+        timer = null
+        l?.setOnClickListener{ start() }
+        l?.text = applicationContext.getString(R.string.start)
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,9 +49,7 @@ class MainActivity : AppCompatActivity() {
         t = findViewById(R.id.clock)
         l = findViewById(R.id.left)
         r = findViewById(R.id.right)
-        l?.setOnClickListener{
-            start()
-        }
+        l?.setOnClickListener{ start() }
         start()
     }
 }
