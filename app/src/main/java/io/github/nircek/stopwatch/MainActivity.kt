@@ -12,33 +12,36 @@ class MainActivity : AppCompatActivity() {
     private var t: TextView? = null
     private var l: Button? = null
     private var r: Button? = null
-    private fun start() {
-        if(timer == null) {
-            timer = fixedRateTimer("default", false, 1000, 1000) {
-                // TODO: instead of increment counter every second, try to calculate (subtract) new value from the actual time
-                t?.let {
-                    val x = it.text.split(":")
-                    var c = x[2].toInt() + 1
-                    var b = x[1].toInt()
-                    if (c > 59) {
-                        b += c / 60
-                        c %= 60
-                    }
-                    var a = x[0].toInt()
-                    if (b > 59) {
-                        a += b / 60
-                        b %= 60
-                    }
-                    runOnUiThread {
-                        it.text = applicationContext.getString(R.string.clock, a, b, c)
-                    }
-                }
+    private var time: Long? = null
+    private var started: Boolean = false
+
+    private fun update() {
+        if (started) {
+            var d = (System.currentTimeMillis() - time!!)
+            d /= 1000
+            val c = d%60
+            d /= 60
+            val b = d%60
+            d /= 60
+            runOnUiThread {
+                t?.text = applicationContext.getString(R.string.clock, d, b, c)
             }
-            l?.setOnClickListener { stop() }
-            l?.text = applicationContext.getString(R.string.stop)
+        }
+    }
+    private fun start() {
+        started = true
+        time = System.currentTimeMillis() - if (time != null) time!! else 0L
+        l?.setOnClickListener { stop() }
+        l?.text = applicationContext.getString(R.string.stop)
+        if(timer == null) {
+            timer = fixedRateTimer("default", false, 200, 200) {
+                update()
+            }
         }
     }
     private fun stop() {
+        time = (System.currentTimeMillis() - time!!)
+        started = true
         timer?.cancel()
         timer = null
         l?.setOnClickListener{ start() }
@@ -46,6 +49,7 @@ class MainActivity : AppCompatActivity() {
     }
     private fun reset() {
         stop()
+        time = null
         t?.text = applicationContext.getString(R.string.clock, 0, 0, 0)
     }
     override fun onCreate(savedInstanceState: Bundle?) {
