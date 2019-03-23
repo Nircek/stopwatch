@@ -4,5 +4,8 @@
     <string name="reset">RESET</string>
     <string name="stop">STOP</string>
     <string name="clock">%02d:%02d:%02d</string>
+    <string name="clock_zeros">00:00:00</string>
     <string name="add_new_stopwatch">Add a new stopwatch</string>
+    <string name="not_existing_destroyed">Fragment \'%s\' does not exist and was trying to be destroy</string>
+    <string name="destroy_stopwatch">Destroy this stopwatch</string>
 </resources>

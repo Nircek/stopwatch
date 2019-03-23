@@ -19,12 +19,7 @@
                     android:orientation="vertical"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:id="@+id/stopwatches">
-                <fragment
-                        android:id="@+id/frag1"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content" android:name="io.github.nircek.stopwatch.Stopwatch"/>
-            </LinearLayout>
+                    android:id="@+id/stopwatches"/>
             <ImageButton
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" app:srcCompat="@android:drawable/ic_input_add"
