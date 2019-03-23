@@ -4,4 +4,5 @@
     <string name="reset">RESET</string>
     <string name="stop">STOP</string>
     <string name="clock">%02d:%02d:%02d</string>
+    <string name="add_new_stopwatch">Add a new stopwatch</string>
 </resources>
