@@ -12,13 +12,17 @@ import java.util.*
 import kotlin.concurrent.fixedRateTimer
 
 class Stopwatch : Fragment() {
+    companion object {
+        private var last_id = 0
+        private fun getNextID() = ++last_id
+    }
     private var timer: Timer? = null
     private var t: TextView? = null
     private var l: Button? = null
     private var r: Button? = null
     private var time: Long? = null
     private var started: Boolean = false
-
+    val frag_id = "frag" + getNextID().toString()
     private fun update() {
         if (started) {
             var d = (System.currentTimeMillis() - time!!)

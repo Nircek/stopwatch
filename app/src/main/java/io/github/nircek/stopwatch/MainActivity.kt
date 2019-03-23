@@ -14,8 +14,8 @@ class MainActivity : AppCompatActivity() {
         stopwatches = findViewById(R.id.stopwatches)
         addNewStopwatch = findViewById(R.id.add_new_stopwatch)
         addNewStopwatch?.setOnClickListener {
-            //TODO: add a counter to the tag of new fragment
-            fragmentManager.beginTransaction().add(stopwatches!!.id, Stopwatch(), "frag2").commit()
+            val s = Stopwatch()
+            fragmentManager.beginTransaction().add(stopwatches!!.id, s, s.frag_id).commit()
         }
     }
 }
