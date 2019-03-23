@@ -2,6 +2,7 @@ package io.github.nircek.stopwatch
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v4.app.FragmentManager
 import android.support.v7.widget.AppCompatImageButton
 import android.widget.LinearLayout
 
@@ -15,7 +16,7 @@ class MainActivity : AppCompatActivity() {
         addNewStopwatch = findViewById(R.id.add_new_stopwatch)
         addNewStopwatch?.setOnClickListener {
             val s = Stopwatch()
-            fragmentManager.beginTransaction().add(stopwatches!!.id, s, s.frag_id).commit()
+            supportFragmentManager.beginTransaction().add(stopwatches!!.id, s, s.frag_id).commit()
         }
     }
 }
