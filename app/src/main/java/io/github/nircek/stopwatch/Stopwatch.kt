@@ -38,14 +38,14 @@ class Stopwatch : Fragment() {
         l?.setOnClickListener { stop() }
         l?.text = activity!!.applicationContext.getString(R.string.stop)
         if(timer == null) {
-            timer = fixedRateTimer("default", false, 200, 200) {
+            timer = fixedRateTimer("default", false, 0, 200) {
                 update()
             }
         }
     }
     private fun stop() {
-        time = (System.currentTimeMillis() - time!!) // time can be null if somebody click "RESET" twice
-        started = true
+        time = if (time != null) System.currentTimeMillis() - time!! else 0L
+        started = false
         timer?.cancel()
         timer = null
         l?.setOnClickListener{ start() }
