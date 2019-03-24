@@ -9,7 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
-import java.util.*
+import java.util.Timer
 import kotlin.concurrent.fixedRateTimer
 
 class Stopwatch : Fragment() {
@@ -104,6 +104,12 @@ class Stopwatch : Fragment() {
         l?.setOnClickListener { if (started) stop() else start() }
         r?.setOnClickListener { reset() }
         d?.setOnClickListener { destroy() }
-        update()
+        if (started) tStart()
+        else update()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        tStop()
     }
 }

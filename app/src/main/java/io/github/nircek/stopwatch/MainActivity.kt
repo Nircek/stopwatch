@@ -6,7 +6,7 @@ import android.support.v7.widget.AppCompatImageButton
 
 class MainActivity : AppCompatActivity() {
     var addNewStopwatch: AppCompatImageButton? = null
-    fun addStopwatch() = Stopwatch().let {
+    private fun addStopwatch() = Stopwatch().let {
         supportFragmentManager.beginTransaction().add(R.id.stopwatches, it, it.fragID).commit()
     }
     override fun onCreate(savedInstanceState: Bundle?) {
