@@ -13,55 +13,69 @@ import java.util.*
 import kotlin.concurrent.fixedRateTimer
 
 class Stopwatch : Fragment() {
+
     companion object {
         private var last_id = 0
         private fun getNextID() = ++last_id
     }
+
     private var timer: Timer? = null
     private var t: TextView? = null
     private var l: Button? = null
     private var r: Button? = null
     private var d: AppCompatImageButton? = null
-    private var time: Long? = null
+    private var time: Long = 0
     private var started: Boolean = false
     val fragID = "frag" + getNextID().toString()
+
     private fun update() {
-        if (started) {
-            var d = (System.currentTimeMillis() - time!!)
-            d /= 1000
-            val c = d%60
-            d /= 60
-            val b = d%60
-            d /= 60
-            activity?.runOnUiThread {
-                t?.text = activity!!.applicationContext.getString(R.string.clock, d, b, c)
-            }
-        }
+        var d = time
+        if (started)
+            d = (System.currentTimeMillis() - d)
+        d /= 1000
+        val c = d%60
+        d /= 60
+        val b = d%60
+        d /= 60
+        activity?.let { it.runOnUiThread {
+            t?.text = it.applicationContext.getString(R.string.clock, d, b, c)
+            l?.text = it.applicationContext.getString(if (started) R.string.stop else R.string.start)
+        } }
+
     }
-    private fun start() {
-        started = true
-        time = System.currentTimeMillis() - if (time != null) time!! else 0L
-        l?.setOnClickListener { stop() }
-        l?.text = activity!!.applicationContext.getString(R.string.stop)
-        if(timer == null) {
-            timer = fixedRateTimer("default", false, 0, 200) {
-                update()
-            }
-        }
+
+    private fun tStart() {
+        timer?.cancel()
+        timer = fixedRateTimer("default", true, 0, 200) { update() }
     }
-    private fun stop() {
-        time = if (time != null) System.currentTimeMillis() - time!! else 0L
-        started = false
+
+    private fun tStop() {
         timer?.cancel()
         timer = null
-        l?.setOnClickListener{ start() }
-        l?.text = activity!!.applicationContext.getString(R.string.start)
     }
+
+    private fun start() {
+        if (!started)
+            time = System.currentTimeMillis() - time
+        started = true
+        tStart()
+    }
+
+    private fun stop() {
+        tStop()
+        if (started)
+            time = System.currentTimeMillis() - time
+        started = false
+        update()
+    }
+
     private fun reset() {
-        stop()
-        time = null
-        t?.text = activity!!.applicationContext.getString(R.string.clock, 0, 0, 0)
+        tStop()
+        time = 0
+        started = false
+        update()
     }
+
     private fun destroy() {
         activity?.let {
             val tag = it.supportFragmentManager.findFragmentByTag(fragID)
@@ -71,6 +85,12 @@ class Stopwatch : Fragment() {
             } else Log.e(activity.toString(), it.applicationContext.getString(R.string.not_existing_destroyed, fragID))
         }
     }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        start()
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_stopwatch, container, false)
     }
@@ -81,9 +101,9 @@ class Stopwatch : Fragment() {
         l = view?.findViewById(R.id.left)
         r = view?.findViewById(R.id.right)
         d = view?.findViewById(R.id.destroy)
-        l?.setOnClickListener { start() }
+        l?.setOnClickListener { if (started) stop() else start() }
         r?.setOnClickListener { reset() }
         d?.setOnClickListener { destroy() }
-        start()
+        update()
     }
 }
