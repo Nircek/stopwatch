@@ -27,6 +27,7 @@ class Stopwatch : Fragment() {
     private var time: Long = 0
     private var started: Boolean = false
     val fragID = "frag" + getNextID().toString()
+    var parent: Stopwatches? = null
 
     private fun update() {
         var d = time
@@ -76,19 +77,15 @@ class Stopwatch : Fragment() {
         update()
     }
 
-    private fun destroy() {
-        activity?.let {
+    fun destroy() {
+        if(parent != null) parent?.destroy(this)
+        else activity?.let {
             val tag = it.supportFragmentManager.findFragmentByTag(fragID)
             if (tag != null) {
                 timer?.cancel()
                 it.supportFragmentManager.beginTransaction().remove(tag).commitAllowingStateLoss()
             } else Log.e(activity.toString(), it.applicationContext.getString(R.string.not_existing_destroyed, fragID))
         }
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        start()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -111,5 +108,18 @@ class Stopwatch : Fragment() {
     override fun onStop() {
         super.onStop()
         tStop()
+    }
+
+    override fun toString() = listOf(started.toString(), time.toString()).joinToString(",")
+
+    fun fromString(x: String): Stopwatch {
+        val a = x.split(",")
+        if (a.size < 2)
+            return this
+        tStop()
+        started = a[0].toBoolean()
+        time = a[1].toLong()
+        update()
+        return this
     }
 }
